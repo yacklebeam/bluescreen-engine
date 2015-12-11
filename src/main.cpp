@@ -5,6 +5,7 @@
 #include "SFMLAssetManager.cpp"
 #include "GameWindow.cpp"
 #include "EntityManager.cpp"
+#include "SFMLInputManager.cpp"
 
 #ifdef RELEASE
 int WINAPI
@@ -17,6 +18,14 @@ int
 main()
 #endif
 {
+    enum Game_Action
+    {
+        MOVE_LEFT,
+        MOVE_UP,
+        MOVE_RIGHT,
+        MOVE_DOWN
+    };
+
     int gameWidth = 600;
     int gameHeight = 600;
 
@@ -29,8 +38,11 @@ main()
 
     eMan.generateSpriteSet("ss-explosion", aMan.getImageAsset("explosion"), 0, 0, 50, 50, 6);
     eMan.generateSpriteSet("ss-explosion-t", aMan.getImageAsset("explosion"), 0, 0, 30, 30, 5);
+    eMan.generateSpriteSet("ss-chars-med", aMan.getImageAsset("chars-med"), 0, 120, 10, 10, 10);
 
-    eMan.addEntity("ss-explosion", 0, 100.0f, 100.0f);
+    eMan.addEntity("ss-chars-med", 0, 100.0f, 100.0f);
+    eMan.addEntity("ss-chars-med", 1, 112.0f, 100.0f);
+    eMan.addEntity("ss-chars-med", 2, 124.0f, 100.0f);
 
     int frameCount = 0;
 
@@ -45,19 +57,19 @@ main()
         //TEST CODE, Working on SFMLInputProcessor
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
         {
-            eMan.moveEntityAtIndex(0, -3, 0);
+            eMan.moveEntityAtIndex(-1, -3, 0);
         }      
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
         {
-            eMan.moveEntityAtIndex(0, 3, 0);
+            eMan.moveEntityAtIndex(-1, 3, 0);
         }      
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
         {
-            eMan.moveEntityAtIndex(0, 0, -3);
+            eMan.moveEntityAtIndex(-1, 0, -3);
         }      
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
         {
-            eMan.moveEntityAtIndex(0, 0, 3);
+            eMan.moveEntityAtIndex(-1, 0, 3);
         }      
 
         mainWindow.clear();

@@ -127,6 +127,15 @@ EntityManager::hasEntityAtIndex(int index)
 void
 EntityManager::moveEntityAtIndex(int index, int xMove, int yMove)
 {
-	entities[index].x += xMove;
-	entities[index].y += yMove;
+	if(index >= 0)
+	{
+		entities[index].x += xMove;
+		entities[index].y += yMove;
+	} else {
+		for(int i = 0; i < entityCount; ++i)
+		{
+			entities[i].x += xMove;
+			entities[i].y += yMove;		
+		}
+	}		
 }
