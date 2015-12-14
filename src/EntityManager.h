@@ -1,26 +1,15 @@
-#ifndef TROXEL_ENTITYMANAGER_H
-#define TROXEL_ENTITYMANAGER_H
+#ifndef BLUESCREEN_ENTITYMANAGER_H
+#define BLUESCREEN_ENTITYMANAGER_H
 
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include "SpriteSet.h"
+#include "Entity.h"
+#include "Vector2d.h"
 
 class EntityManager
 {
 private:
-	struct SpriteSet
-	{
-		char* tag;
-		sf::Sprite* sprites;
-		int maxSpriteIndex;
-	};
-	struct Entity
-	{
-		SpriteSet* spriteSet;
-		int x;
-		int y;
-		int currentSpriteIndex;
-		bool dead;
-	};
 	int entityCount;
 	int spriteCount;
 	std::vector<Entity> entities;
@@ -34,11 +23,17 @@ public:
 	void update();
 	int getEntityCount();
 	sf::Sprite* getSpriteAtIndex(int);
-	void updateEntityAtIndex(int, int);
+	void updateEntityAtIndex(int);
 	bool hasEntityAtIndex(int);
+	void generateSpriteSet(char*, sf::Texture*, int, int, int, int, int, int, int);
 	void generateSpriteSet(char*, sf::Texture*, int, int, int, int, int);
-	void addEntity(char*, int, float, float);
+	int addEntity(char*, int, float, float, int, char*);
 	void moveEntityAtIndex(int index, int xMove, int yMove);
+	void setEntitySpriteAtIndex(int, char*);
+	void updateEntityState(int, char*);
+	void setEntityVelocity(int, float, float);
+	vec2d getEntityPosition(int);
+	int getOpenIndex();
 };
 
 #endif

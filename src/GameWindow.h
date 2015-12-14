@@ -1,5 +1,5 @@
-#ifndef TROXEL_GAMEWINDOW_H
-#define TROXEL_GAMEWINDOW_H
+#ifndef BLUESCREEN_GAMEWINDOW_H
+#define BLUESCREEN_GAMEWINDOW_H
 
 #include <SFML/Window.hpp>
 

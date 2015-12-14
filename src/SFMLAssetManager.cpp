@@ -1,5 +1,6 @@
 #include "SFMLAssetManager.h"
 #include <cstdio>
+#include <cstring>
 
 SFMLAssetManager::SFMLAssetManager()
 {
@@ -16,7 +17,11 @@ SFMLAssetManager::loadImageAsset(char* tagIn, char* path)
 {
 	sf::Texture t;
 	TextureAsset ta;
-	if(t.loadFromFile(path))
+
+	std::string fullpath = "../res/";
+	fullpath.append(path);
+
+	if(t.loadFromFile(fullpath))
 	{
 		ta.texture = t;
 		ta.tag = tagIn;

@@ -1,5 +1,5 @@
-#ifndef TROXEL_INPUTMANAGER_H
-#define TROXEL_INPUTMANAGER_H
+#ifndef BLUESCREEN_INPUTMANAGER_H
+#define BLUESCREEN_INPUTMANAGER_H
 
 #include <SFML/Window.hpp>
 #include <cstdio>

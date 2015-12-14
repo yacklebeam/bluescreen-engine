@@ -1,5 +1,5 @@
-#ifndef TROXEL_SFMLASSET_H
-#define TROXEL_SFMLASSET_H
+#ifndef BLUESCREEN_SFMLASSET_H
+#define BLUESCREEN_SFMLASSET_H
 
 #include <SFML/Graphics.hpp>
 #include <vector>
