@@ -60,6 +60,9 @@ EntityManager::generateSpriteSet(char* tagIn, sf::Texture* texture, int startX, 
 
 	sprites.push_back(set);
 	spriteCount++;
+#ifndef RELEASE
+	printf("Generating Sprite Set: %s\n", tagIn);
+#endif
 }
 
 void
@@ -82,6 +85,9 @@ EntityManager::generateSpriteSet(char* tagIn, sf::Texture* texture, int startX, 
 
 	sprites.push_back(set);
 	spriteCount++;
+#ifndef RELEASE
+	printf("Generating Sprite Set: %s\n", tagIn);
+#endif
 }
 
 int
@@ -157,6 +163,7 @@ EntityManager::getSpriteAtIndex(int index)
 void
 EntityManager::updateEntityAtIndex(int index)
 {
+	//TODO (jtroxel): stop all the array indexing
 	if(strcmp(entities[index].state, entities[index].transitionState) != 0)
 	{
 		entities[index].state = entities[index].transitionState;
@@ -171,11 +178,15 @@ EntityManager::updateEntityAtIndex(int index)
 		{
 			entities[index].currentSpriteIndex = 0;
 		}
-	} else {
+	}
+	else
+	{
 		entities[index].tick++;
 	}
 
 	//always do these things
+	//TODO (jtroxel): change this to better physics
+	//TODO (jtroxel): use game heights and widths pls
 	entities[index].position.x += entities[index].velocity.x;
 	entities[index].position.y += entities[index].velocity.y;
 	if(	entities[index].position.x < 0 - entities[index].width ||
@@ -184,6 +195,10 @@ EntityManager::updateEntityAtIndex(int index)
 		entities[index].position.y > 600)
 	{
 		entities[index].dead = true;
+	}
+	else
+	{
+		if(entities[index].update) entities[index].update();
 	}
 }
 
@@ -223,4 +238,10 @@ EntityManager::getOpenIndex()
 		if(entities[i].dead) return i;
 	}
 	return entityCount;
+}
+
+char*
+EntityManager::getEntityState(int index)
+{
+	return entities[index].state;
 }

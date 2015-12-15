@@ -34,6 +34,7 @@ public:
 	void setEntityVelocity(int, float, float);
 	vec2d getEntityPosition(int);
 	int getOpenIndex();
+	char* getEntityState(int);
 };
 
 #endif

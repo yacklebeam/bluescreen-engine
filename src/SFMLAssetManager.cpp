@@ -12,6 +12,7 @@ SFMLAssetManager::~SFMLAssetManager()
 
 }
 
+//TODO (jtroxel): Check if loaded already
 void
 SFMLAssetManager::loadImageAsset(char* tagIn, char* path)
 {
@@ -28,6 +29,10 @@ SFMLAssetManager::loadImageAsset(char* tagIn, char* path)
 
 		textures.push_back(ta);
 	}
+
+#ifndef RELEASE
+	printf("Loading Image: %s\n", tagIn);
+#endif
 }
 
 void
