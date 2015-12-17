@@ -10,6 +10,7 @@
 class EntityManager
 {
 private:
+	//TODO (jtroxel): REMOVE THESE COUNTS YOU TWAT VECTOS HAVE SIZES
 	int entityCount;
 	int spriteCount;
 	std::vector<Entity> entities;
@@ -27,7 +28,7 @@ public:
 	bool hasEntityAtIndex(int);
 	void generateSpriteSet(char*, sf::Texture*, int, int, int, int, int, int, int);
 	void generateSpriteSet(char*, sf::Texture*, int, int, int, int, int);
-	int addEntity(char*, int, float, float, int, char*);
+	int addEntity(char*, int, float, float, int, char*, void (*f)(int));
 	void moveEntityAtIndex(int index, int xMove, int yMove);
 	void setEntitySpriteAtIndex(int, char*);
 	void updateEntityState(int, char*);

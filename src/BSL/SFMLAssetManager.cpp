@@ -36,9 +36,25 @@ SFMLAssetManager::loadImageAsset(char* tagIn, char* path)
 }
 
 void
-SFMLAssetManager::loadSoundAsset(char* tag, char* path)
+SFMLAssetManager::loadSoundAsset(char* tagIn, char* path)
 {
+	sf::SoundBuffer sb;
+	SoundAsset sa;
 
+	std::string fullpath = "../res/";
+	fullpath.append(path);
+
+	if(sb.loadFromFile(fullpath))
+	{
+		sa.buffer = sb;
+		sa.tag = tagIn;
+
+		sounds.push_back(sa);
+	}
+
+#ifndef RELEASE
+	printf("Loading Sound: %s\n", tagIn);
+#endif
 }
 
 void
@@ -57,6 +73,21 @@ SFMLAssetManager::getImageAsset(char* search)
 		{
 			result = &textures[i].texture;
 		}
+	}
+
+	return result;
+}
+
+sf::SoundBuffer*
+SFMLAssetManager::getSoundAsset(char* search)
+{
+	sf::SoundBuffer* result;
+	for(int i = 0; i < sounds.size(); ++i)
+	{
+		if(strcmp(sounds[i].tag, search) == 0)
+		{
+			result = &sounds[i].buffer;
+		}	
 	}
 
 	return result;

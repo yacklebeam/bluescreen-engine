@@ -24,7 +24,7 @@ struct Entity
 	int updateSpeed;
 	int height;
 	int width;
-	void (*update)() = NULL;
+	void (*update)(int) = NULL;
 };
 
 struct Entity2

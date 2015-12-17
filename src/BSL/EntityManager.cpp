@@ -91,7 +91,7 @@ EntityManager::generateSpriteSet(char* tagIn, sf::Texture* texture, int startX, 
 }
 
 int
-EntityManager::addEntity(char* spriteSetTag, int initialSpriteIndex, float xIn, float yIn, int tickSpeed, char* startingState)
+EntityManager::addEntity(char* spriteSetTag, int initialSpriteIndex, float xIn, float yIn, int tickSpeed, char* startingState, void (*updateFunc)(int))
 {
 	Entity e;
 	e.spriteSet = getSpriteSet(spriteSetTag);
@@ -107,6 +107,7 @@ EntityManager::addEntity(char* spriteSetTag, int initialSpriteIndex, float xIn, 
 	e.velocity.y = 0;
 	e.width = e.spriteSet->width;
 	e.height = e.spriteSet->height;
+	e.update = updateFunc;
 
 	int openIndex = getOpenIndex();
 	if(openIndex == entityCount)
@@ -198,7 +199,7 @@ EntityManager::updateEntityAtIndex(int index)
 	}
 	else
 	{
-		if(entities[index].update) entities[index].update();
+		if(entities[index].update) entities[index].update(index);
 	}
 }
 
