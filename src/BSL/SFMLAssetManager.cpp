@@ -1,4 +1,4 @@
-#include "SFMLAssetManager.h"
+#include "SFMLAssetManager.hpp"
 #include <cstdio>
 #include <cstring>
 
@@ -29,10 +29,6 @@ SFMLAssetManager::loadImageAsset(char* tagIn, char* path)
 
 		textures.push_back(ta);
 	}
-
-#ifndef RELEASE
-	printf("Loading Image: %s\n", tagIn);
-#endif
 }
 
 void
@@ -51,10 +47,6 @@ SFMLAssetManager::loadSoundAsset(char* tagIn, char* path)
 
 		sounds.push_back(sa);
 	}
-
-#ifndef RELEASE
-	printf("Loading Sound: %s\n", tagIn);
-#endif
 }
 
 void

@@ -1,4 +1,4 @@
-#include "SFMLAudioManager.h"
+#include "SFMLAudioManager.hpp"
 #include <cstdio>
 
 SFMLAudioManager::SFMLAudioManager()
@@ -25,9 +25,6 @@ SFMLAudioManager::addSound(char* tagIn, sf::SoundBuffer* buffer, float volumeSca
 	gs.scalingFactor = volumeScalingIn;
 
 	sounds.push_back(gs);
-#ifndef RELEASE
-	printf("Creating Sound: %s\n", tagIn);
-#endif
 }
 
 void
@@ -38,6 +35,18 @@ SFMLAudioManager::playSound(char* search)
 		if(strcmp(sounds[i].tag, search) == 0)
 		{	
 			sounds[i].sound.play();
+		}
+	}
+}
+
+void
+SFMLAudioManager::pauseSound(char* search)
+{
+	for(int i = 0; i < sounds.size(); ++i)
+	{
+		if(strcmp(sounds[i].tag, search) == 0)
+		{	
+			sounds[i].sound.pause();
 		}
 	}
 }

@@ -1,15 +1,21 @@
-#include "SFMLInputManager.h"
+#include "SFMLInputManager.hpp"
 
 SFMLInputManager::SFMLInputManager()
 {
-	for(int i = 0; i < JOYSTICK_ACTION_COUNT; ++i)
+	for(int i = 0; i < sf::Joystick::AxisCount; ++i)
 	{
-		joystickActions[i] = -1;
+		joystickAxisActions[i][0] = -1;
+		joystickAxisActions[i][1] = -1;
 	}
 
 	for(int i = 0; i < sf::Keyboard::KeyCount; ++i)
 	{
 		keyboardActions[i] = -1;
+	}
+
+	for(int i = 0; i < sf::Joystick::ButtonCount; ++i)
+	{
+		joystickButtonActions[i] = -1;
 	}
 
 	joystickEnabled = false;
@@ -48,25 +54,40 @@ SFMLInputManager::isJoystickEnabled()
 }
 
 void
-SFMLInputManager::bindKeyAction(sf::Keyboard::Key inputIn, int actionIn, bool canHoldDown)
+SFMLInputManager::bindKeyToAction(sf::Keyboard::Key inputIn, int actionIn)
 {
 	initInput(actionIn);
 	keyboardActions[inputIn] = actionIn;
-	actions[actionIn].keyCanHold = canHoldDown;
 }
 
 void
-SFMLInputManager::bindJoystickAction(JOYSTICK_ACTION ja, int actionIn, bool canHoldDown)
+SFMLInputManager::bindJoystickAxisToActions(sf::Joystick::Axis axisIn, int actionMin, int actionMax)
+{
+	initInput(actionMax);
+	initInput(actionMin);
+
+	joystickAxisActions[axisIn][AXIS_DIRECTION_MIN] = actionMin;
+	joystickAxisActions[axisIn][AXIS_DIRECTION_MAX] = actionMax;
+}
+
+void
+SFMLInputManager::bindJoystickAxisDirectionToAction(sf::Joystick::Axis axisIn, AXIS_DIRECTION direction, int actionIn)
 {
 	initInput(actionIn);
-	joystickActions[ja] = actionIn;
-	actions[actionIn].jsCanHold = canHoldDown;
+	joystickAxisActions[axisIn][direction] = actionIn;
+}
+
+void
+SFMLInputManager::bindJoystickButtonToAction(int buttonIn, int actionIn)
+{
+	initInput(actionIn);
+	joystickButtonActions[buttonIn] = actionIn;
 }
 
 bool
 SFMLInputManager::testIsKeyPressed(int index)
 {
-	if(actions[index].jsCanHold)
+	if(actions[index].canHold)
 	{
 		return actions[index].down;
 	}
@@ -105,48 +126,51 @@ SFMLInputManager::processInput(sf::Event event)
 		case sf::Event::JoystickMoved:
 			if(joystickEnabled)
 			{
-				if(event.joystickMove.axis == sf::Joystick::X)
+				int minIndex = joystickAxisActions[event.joystickMove.axis][AXIS_DIRECTION_MIN];
+				int maxIndex = joystickAxisActions[event.joystickMove.axis][AXIS_DIRECTION_MAX];
+
+				if(event.joystickMove.position < -50.0f)
 				{
-					if(event.joystickMove.position < -50.0f)
-					{
-						actions[joystickActions[CONTROLLER_AXIS_LEFT]].down = true;
-						actions[joystickActions[CONTROLLER_AXIS_RIGHT]].down = false;
-					}
-					else if(event.joystickMove.position > 50.0f)
-					{
-						actions[joystickActions[CONTROLLER_AXIS_RIGHT]].down = true;
-						actions[joystickActions[CONTROLLER_AXIS_LEFT]].down = false;
-					}
-					else
-					{
-						actions[joystickActions[CONTROLLER_AXIS_RIGHT]].down = false;
-						actions[joystickActions[CONTROLLER_AXIS_LEFT]].down = false;					
-					}
+					actions[joystickAxisActions[event.joystickMove.axis][AXIS_DIRECTION_MIN]].down = true;
+					actions[joystickAxisActions[event.joystickMove.axis][AXIS_DIRECTION_MAX]].down = false;
+					actions[joystickAxisActions[event.joystickMove.axis][AXIS_DIRECTION_MAX]].reset = true;
 				}
+				else if(event.joystickMove.position > 50.0f)
+				{
+					actions[joystickAxisActions[event.joystickMove.axis][AXIS_DIRECTION_MAX]].down = true;
+					actions[joystickAxisActions[event.joystickMove.axis][AXIS_DIRECTION_MIN]].down = false;
+					actions[joystickAxisActions[event.joystickMove.axis][AXIS_DIRECTION_MIN]].reset = true;
+				}
+				else
+				{
+					actions[joystickAxisActions[event.joystickMove.axis][AXIS_DIRECTION_MAX]].down = false;
+					actions[joystickAxisActions[event.joystickMove.axis][AXIS_DIRECTION_MAX]].reset = true;
+					actions[joystickAxisActions[event.joystickMove.axis][AXIS_DIRECTION_MIN]].down = false;
+					actions[joystickAxisActions[event.joystickMove.axis][AXIS_DIRECTION_MIN]].reset = true;
+				}
+			
 			}
 			break;
 		case sf::Event::JoystickButtonPressed:
 			if(joystickEnabled)
 			{
-				actions[joystickActions[event.joystickButton.button]].down = true;
-				/*if(event.joystickButton.button == 0)
-				{
-					actions[joystickActions[BUTTON_0]].down = true;
-				}*/
+				actions[joystickButtonActions[event.joystickButton.button]].down = true;
 			}
 			break;
 		case sf::Event::JoystickButtonReleased:
 			if(joystickEnabled)
 			{
-				actions[joystickActions[event.joystickButton.button]].down = false;
-				actions[joystickActions[event.joystickButton.button]].reset = true;
-
-				/*if(event.joystickButton.button == 0)
-				{
-					actions[joystickActions[A_BUTTON]].down = false;
-					actions[joystickActions[A_BUTTON]].reset = true;
-				}*/
+				actions[joystickButtonActions[event.joystickButton.button]].down = false;
+				actions[joystickButtonActions[event.joystickButton.button]].reset = true;
 			}
 			break;
 	}
+}
+
+void
+SFMLInputManager::initInputAction(int actionIn, bool canHoldDown, bool permanentKeyEnabled)
+{
+	initInput(actionIn);
+	actions[actionIn].canHold = canHoldDown;
+	actions[actionIn].pKeyEnabled = permanentKeyEnabled;
 }

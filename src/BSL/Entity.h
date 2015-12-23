@@ -24,6 +24,8 @@ struct Entity
 	int updateSpeed;
 	int height;
 	int width;
+	int hitboxIndex;
+	bool dieOnComplete;
 	void (*update)(int) = NULL;
 };
 
